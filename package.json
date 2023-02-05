@@ -13,10 +13,7 @@
   },
   "dependencies": {
     "element-plus": "^2.2.29",
-    "element-plus-table-dragable": "^1.0.0",
-    "vue": "^3.2.45",
-    "vue-router": "^4.1.6",
-    "vuedraggable": "^4.1.0"
+    "vue": "^3.2.45"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
