@@ -108,11 +108,8 @@ const handleSummaryCreate = () => {
 
 <template>
   <el-descriptions title="多步表单配置模块">
-    <el-descriptions-item label="表格内容：使用说明"
-      >表格可以直接拖动排序</el-descriptions-item
-    >
-    <el-descriptions-item label="工具栏：创建普通问题/创建结束问题"
-      >普通问题可以创建多个，结束问题只能创建一个</el-descriptions-item
+    <el-descriptions-item label="工具栏：创建普通问题/创建最后问题"
+      >普通问题可以创建多个，最后的问题只能创建一个</el-descriptions-item
     >
   </el-descriptions>
   <div>
