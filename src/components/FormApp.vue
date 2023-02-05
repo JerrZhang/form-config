@@ -20,11 +20,7 @@ const hasSummary = computed(() => {
   return questionList.value.find((r) => r.id === "__complete");
 });
 
-const popupTitle = ref("创建问题");
-
 const handleEdit = (row: Question | Summary) => {
-  popupTitle.value = "编辑问题";
-
   if (row.id === "__complete") {
     summary = row as Summary;
     item = {} as Question;
@@ -74,8 +70,6 @@ const handleSummaryConfirm = (item: Summary) => {
 };
 
 const handleCreate = () => {
-  popupTitle.value = "创建问题";
-
   item = reactive<Question>({
     id: "",
     tagline: "",
@@ -92,8 +86,6 @@ const handleCreate = () => {
 };
 
 const handleSummaryCreate = () => {
-  popupTitle.value = "创建问题";
-
   summaryDialogVisible.value = true;
 
   summary = reactive<Summary>({
