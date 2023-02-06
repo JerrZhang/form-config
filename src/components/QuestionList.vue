@@ -11,68 +11,48 @@ const handleEdit = (q: Question | Summary) => {
 const handleDelete = (q: Question | Summary) => {
   emit("delete", q);
 };
+
+const viewBooleanText = (q: Question, key: keyof Question) => {
+  return q[key] === undefined ? "" : q[key] ? "是" : "否";
+};
 </script>
 <template>
   <div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th style="width: 180px">ID</th>
-          <th style="width: calc(100% - 360px)">标题</th>
-          <th style="width: 180px">操作</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(element, idx) in questions" :key="idx">
-          <td>{{ element.id }}</td>
-          <td>{{ element.title }}</td>
-          <td>
-            <el-button size="small" @click="handleEdit(element)"
-              >编辑</el-button
-            >
-            <el-button size="small" type="danger" @click="handleDelete(element)"
-              >删除</el-button
-            >
-          </td>
-        </tr>
-      </tbody>
-
-      <tfoot v-if="questions.length === 0">
-        <td colspan="3" style="text-align: center">没有数据</td>
-      </tfoot>
-    </table>
+    <el-table :data="questions" style="width: 100%">
+      <el-table-column fixed prop="id" label="ID" width="180" />
+      <el-table-column prop="title" label="标题" />
+      <el-table-column prop="type" label="问题类型" width="180" />
+      <el-table-column label="是否必填" width="180">
+        <template #default="scope">
+          {{ viewBooleanText(scope.row, "required") }}
+        </template>
+      </el-table-column>
+      <el-table-column label="显示提示文本" width="180">
+        <template #default="scope">
+          <div>
+            {{ viewBooleanText(scope.row, "helpTextShow") }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Keepalive" width="180">
+        <template #default="scope">
+          <div>
+            {{ viewBooleanText(scope.row, "keepAlive") }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="180" fixed="right">
+        <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.row)"
+            >编辑</el-button
+          >
+          <el-button size="small" type="danger" @click="handleDelete(scope.row)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
-<style scoped>
-.table {
-  width: 100%;
-  margin-bottom: 1rem;
-  color: #212529;
-  border-collapse: collapse;
-}
-
-.table th {
-  /* color: #fff; */
-  /* background-color: #343a40; */
-  border-color: #454d55;
-}
-
-.table thead th {
-  vertical-align: bottom;
-  border-bottom: 1px solid #dee2e6;
-  border-top: none;
-  text-align: left;
-  font-weight: 500;
-}
-
-.table td,
-.table th {
-  padding: 0.75rem;
-  vertical-align: top;
-  border-top: 1px solid var(--el-border-color);
-  border-bottom: 1px solid var(--el-border-color);
-  word-break: break-all;
-}
-</style>
+<style scoped></style>
