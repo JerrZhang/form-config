@@ -12,6 +12,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "dexie": "^3.2.3",
     "element-plus": "^2.2.29",
     "vue": "^3.2.45"
   },

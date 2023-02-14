@@ -1,5 +1,10 @@
 <script setup lang="ts">
-const emit = defineEmits(["createQuestion", "createSummary", "viewResult"]);
+const emit = defineEmits([
+  "createQuestion",
+  "createSummary",
+  "viewResult",
+  "preview",
+]);
 
 defineProps<{ hasSummary: boolean }>();
 
@@ -24,6 +29,9 @@ const handleViewResult = () => {
       :disabled="hasSummary"
       >创建最后问题</el-button
     >
+    <el-button type="primary" @click="emit('preview')" :disabled="!hasSummary"
+      >预览</el-button
+    >
     <el-button type="primary" @click="handleViewResult">查看JSON结果</el-button>
   </div>
 </template>
@@ -32,7 +40,6 @@ const handleViewResult = () => {
 .toolbar {
   display: flex;
   justify-content: right;
-  border-bottom: 1px dashed var(--el-border-color);
   margin-bottom: 10px;
   padding: 10px;
 }

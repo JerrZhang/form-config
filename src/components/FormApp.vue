@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
-
+import { ref, reactive, computed, watch, onMounted } from "vue";
+import { db } from "../db";
+import FormPreview from "./FormPreview.vue";
 import QuestionToolbar from "./QuestionToolbar.vue";
 import QuestionList from "./QuestionList.vue";
 import QuestionItem from "./QuestionItem.vue";
@@ -11,10 +12,51 @@ import type { Question, Summary } from "./types";
 const dialogVisible = ref(false);
 const summaryDialogVisible = ref(false);
 const jsonResultDialogVisible = ref(false);
+const formResultPreviewVisible = ref(false);
 
 let item: Question;
 let summary: Summary;
 let questionList = ref<Array<Question | Summary>>([]);
+
+//@fixme 没有问题列表只有一个
+const findOne = async () => {
+  return (await db.forms.limit(1).toArray())[0];
+};
+const loadQuestions = async () => {
+  const itemOne = await findOne();
+  try {
+    if (itemOne?.content) {
+      console.log("");
+      questionList.value.push(...JSON.parse(itemOne.content));
+    }
+  } catch (error) {
+    console.log("load questions", error);
+  }
+};
+const loaded = ref(false);
+onMounted(async () => {
+  await loadQuestions();
+  loaded.value = true;
+});
+
+watch(
+  questionList,
+  async () => {
+    if (!loaded.value) return;
+    console.log("数据发生变化，更新数据库");
+    const itemOne = await findOne();
+    const data = { content: JSON.stringify(questionList.value) };
+    try {
+      const result = itemOne?.id
+        ? await db.forms.update(itemOne.id, data)
+        : await db.forms.add(data);
+      console.log("updated", result);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  { deep: true }
+);
 
 const hasSummary = computed(() => {
   return questionList.value.find((r) => r.id === "__complete");
@@ -96,22 +138,37 @@ const handleSummaryCreate = () => {
     showSubmit: false,
   });
 };
+const handleHeadBack = () => {
+  location.href = "https://www.ptengine.com";
+};
 </script>
 
 <template>
-  <el-descriptions title="多步表单配置模块">
-    <el-descriptions-item label="工具栏：创建普通问题/创建最后问题"
-      >普通问题可以创建多个，最后的问题只能创建一个</el-descriptions-item
-    >
-  </el-descriptions>
-  <div>
-    <QuestionToolbar
-      :has-summary="!!hasSummary"
-      @create-question="handleCreate"
-      @create-summary="handleSummaryCreate"
-      @view-result="jsonResultDialogVisible = true"
-    ></QuestionToolbar>
+  <el-page-header :icon="null" @back="handleHeadBack">
+    <template #content>
+      <div class="flex items-center">
+        <span class="text-large font-600 mr-3"> PT表单工具箱 </span>
 
+        <span class="text-sm mr-2" style="color: var(--el-text-color-regular)">
+          用来创建、配置多步表单的辅助工具
+        </span>
+        <el-tag>beta-0.0.1</el-tag>
+      </div>
+    </template>
+    <template #extra>
+      <div class="flex items-center">
+        <QuestionToolbar
+          :has-summary="!!hasSummary"
+          @create-question="handleCreate"
+          @create-summary="handleSummaryCreate"
+          @view-result="jsonResultDialogVisible = true"
+          @preview="formResultPreviewVisible = true"
+        ></QuestionToolbar>
+      </div>
+    </template>
+  </el-page-header>
+
+  <div>
     <QuestionList
       :questions="questionList"
       @edit="handleEdit"
@@ -125,7 +182,8 @@ const handleSummaryCreate = () => {
       :visible="dialogVisible"
       @cancel="dialogVisible = false"
       @confirm="handleConfirm"
-    ></QuestionItem>
+    >
+    </QuestionItem>
   </div>
 
   <div v-if="summaryDialogVisible">
@@ -142,7 +200,16 @@ const handleSummaryCreate = () => {
       :visible="jsonResultDialogVisible"
       :questions="questionList"
       @close="jsonResultDialogVisible = false"
-    ></ResultView>
+    >
+    </ResultView>
+  </div>
+
+  <div v-if="formResultPreviewVisible">
+    <FormPreview
+      :JsonResult="JSON.stringify(questionList)"
+      :visible="formResultPreviewVisible"
+      @close="formResultPreviewVisible = false"
+    ></FormPreview>
   </div>
 </template>
 
