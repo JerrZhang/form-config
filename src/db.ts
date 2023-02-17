@@ -1,5 +1,6 @@
 import Dexie from "dexie";
 import type { Table } from "dexie";
+import type { Survey, SurveyItem } from "./components/types";
 
 export interface Form {
   id?: number;
@@ -7,12 +8,14 @@ export interface Form {
 }
 
 export class PtClientDB extends Dexie {
-  forms!: Table<Form>;
+  survey!: Table<Survey>;
+  surveyItem!: Table<SurveyItem>;
 
   constructor() {
-    super("pt-form-db");
+    super("pt-client-db");
     this.version(1).stores({
-      forms: "++id, content", // Primary key and indexed props
+      survey: "++id,name,description,createdAt",
+      surveyItem: "++id,content,surveyId,createdAt",
     });
   }
 }

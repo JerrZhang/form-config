@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { reactive } from "vue";
 import type { Question } from "./types";
 import { questionTypes } from "./constants";
 import SelectOptions from "./SelectOptions.vue";
@@ -12,22 +12,17 @@ const emit = defineEmits(["confirm", "cancel"]);
 
 const question = reactive({ ...props.item });
 
-const dialogVisible = ref(props.visible);
-
 const handleConfirm = () => {
   emit("confirm", question);
 };
-
-const title = computed(() => {
-  return props.item.id ? "编辑问题" : "新建问题";
-});
 </script>
 <template>
   <el-dialog
-    v-model="dialogVisible"
+    @close="emit('cancel')"
+    :model-value="props.visible"
     :align-center="true"
-    :title="title"
-    width="95%"
+    :title="props.item.id ? '编辑问题' : '新建问题'"
+    width="85%"
   >
     <div class="popup-body">
       <el-form :model="question" label-width="120px">
@@ -91,7 +86,7 @@ const title = computed(() => {
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="emit('cancel')">取消</el-button>
-        <el-button type="primary" @click="handleConfirm"> 确认 </el-button>
+        <el-button type="success" @click="handleConfirm"> 确认 </el-button>
       </span>
     </template>
   </el-dialog>

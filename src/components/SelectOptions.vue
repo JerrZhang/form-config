@@ -33,9 +33,6 @@ const handleAdd = () => {
       :key="idx"
       :model="item"
     >
-      <el-form-item label="选项标题">
-        <el-input v-model="item.label" placeholder="请输入选项标题" />
-      </el-form-item>
       <el-form-item label="选项内容">
         <el-input v-model="item.value" placeholder="请输入选项内容" />
       </el-form-item>

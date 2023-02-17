@@ -5,7 +5,7 @@ declare var window: any;
 import { ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps<{ JsonResult: string; visible: boolean }>();
-const emits = defineEmits(["close"]);
+const emit = defineEmits(["close"]);
 
 const formPreviewDialogVisible = ref(props.visible);
 
@@ -66,7 +66,7 @@ onUnmounted(() => {
     :align-center="true"
     title="表单预览"
     width="80%"
-    @close="emits('close')"
+    @close="emit('close')"
   >
     <div class="render-container">
       <div ref="domRef"></div>

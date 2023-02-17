@@ -43,12 +43,20 @@ const viewBooleanText = (q: Question, key: keyof Question) => {
       </el-table-column>
       <el-table-column label="操作" width="180" fixed="right">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.row)"
-            >编辑</el-button
+          <el-button size="small" type="success" @click="handleEdit(scope.row)">
+            <el-icon><Edit /></el-icon>
+            <span>编辑</span>
+          </el-button>
+          <el-button
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.row)"
           >
-          <el-button size="small" type="danger" @click="handleDelete(scope.row)"
-            >删除</el-button
-          >
+            <el-icon>
+              <Delete />
+            </el-icon>
+            <span>删除</span>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -27,3 +27,19 @@ export interface Summary extends Content {
   description?: string;
   showSubmit: boolean;
 }
+
+export interface Survey {
+  id?: number;
+  name: string;
+  description?: string;
+  updatedAt?: number;
+  createdAt?: number;
+}
+
+export interface SurveyItem {
+  id?: number;
+  content: string;
+  surveyId: string;
+  createdAt: number;
+  updatedAt?: number;
+}

@@ -7,29 +7,32 @@ const props = defineProps<{
   questions: Array<Question | Summary>;
 }>();
 
-const emits = defineEmits(["close"]);
+const emit = defineEmits(["close"]);
 
 const jsonResultDialogVisible = ref(props.visible);
 
 const jsonResult = computed(() => {
   const processedResult = props.questions.map((q) => {
     const item = q as Question;
-    //如果是选择项
-    if (item.type && !item.type.includes("choice")) {
+    const { __meta, ...rest } = item;
+    rest.options = rest.options?.map((o) => {
       return {
-        ...item,
+        ...o,
+        label: o.value,
+      };
+    });
+    //如果是选择项
+    if (rest.type && !rest.type.includes("choice")) {
+      return {
+        ...rest,
         options: undefined,
       };
     }
-    return item;
+    return rest;
   });
 
   return JSON.stringify(processedResult, null, 4);
 });
-
-const handleClose = () => {
-  emits("close");
-};
 </script>
 <template>
   <el-dialog
@@ -37,7 +40,7 @@ const handleClose = () => {
     :align-center="true"
     title="JSON结果"
     width="95%"
-    @close="handleClose"
+    @close="emit('close')"
   >
     <div>
       <el-input
