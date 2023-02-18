@@ -5,10 +5,16 @@
   <el-timeline>
     <el-timeline-item center timestamp="2023/2/18" placement="top">
       <el-card>
+        <h4>支持配置跳转条件</h4>
+        <p>小凡 committed 2023/2/18 13:06</p>
+      </el-card>
+    </el-timeline-item>
+    <el-timeline-item center timestamp="2023/2/17" placement="top">
+      <el-card>
         <h4>增加调研管理模块</h4>
         <h4>优化选项配置</h4>
         <h4>增加分页</h4>
-        <p>小凡 committed 2018/4/12 20:46</p>
+        <p>小凡 committed 2023/2/17 00:46</p>
       </el-card>
     </el-timeline-item>
     <el-timeline-item center timestamp="2023/2/11" placement="top">

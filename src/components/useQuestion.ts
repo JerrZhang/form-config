@@ -6,6 +6,7 @@ import type { SurveyItem } from "./types";
 export function useQuestion() {
   const questionVisible = ref(false);
   const summaryVisible = ref(false);
+  const jumpVisible = ref(false);
 
   return {
     find,
@@ -14,6 +15,7 @@ export function useQuestion() {
     remove,
     questionVisible,
     summaryVisible,
+    jumpVisible,
   };
 
   function find(surveyId: string) {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Question, Summary } from "./types";
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(["edit", "delete", "jump-edit"]);
 defineProps<{ questions: Array<Question | Summary> }>();
 
 const handleEdit = (q: Question | Summary) => {
@@ -10,6 +10,10 @@ const handleEdit = (q: Question | Summary) => {
 
 const handleDelete = (q: Question | Summary) => {
   emit("delete", q);
+};
+
+const handleJump = (q: Question) => {
+  emit("jump-edit", q);
 };
 
 const viewBooleanText = (q: Question, key: keyof Question) => {
@@ -34,14 +38,8 @@ const viewBooleanText = (q: Question, key: keyof Question) => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Keepalive" width="180">
-        <template #default="scope">
-          <div>
-            {{ viewBooleanText(scope.row, "keepAlive") }}
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="180" fixed="right">
+
+      <el-table-column label="操作" width="270" fixed="right">
         <template #default="scope">
           <el-button size="small" type="success" @click="handleEdit(scope.row)">
             <el-icon><Edit /></el-icon>
@@ -56,6 +54,17 @@ const viewBooleanText = (q: Question, key: keyof Question) => {
               <Delete />
             </el-icon>
             <span>删除</span>
+          </el-button>
+          <el-button
+            v-if="scope.row.id !== '__complete'"
+            size="small"
+            type="success"
+            @click="handleJump(scope.row)"
+          >
+            <el-icon>
+              <Setting />
+            </el-icon>
+            <span>设置跳转条件</span>
           </el-button>
         </template>
       </el-table-column>

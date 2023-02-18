@@ -10,7 +10,7 @@ const props = defineProps<{
 
 const options = toRef(props, "options");
 
-const handleDelete = (item: AnswerOption, idx: number) => {
+const handleDelete = (idx: number) => {
   options.value.splice(idx, 1);
 };
 
@@ -45,10 +45,10 @@ const handleAdd = () => {
           :icon="Delete"
           circle
           v-if="options.length !== 1"
-          @click="handleDelete(item, idx)"
+          @click="handleDelete(idx)"
         />
         <el-button
-          type="primary"
+          type="success"
           :icon="Plus"
           circle
           v-if="idx === options.length - 1"

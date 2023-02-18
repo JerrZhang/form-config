@@ -7,12 +7,14 @@ import QuestionList from "./QuestionList.vue";
 import QuestionItem from "./QuestionItem.vue";
 import SummaryItem from "./SummaryItem.vue";
 import ResultView from "./ResultView.vue";
+import JumpCondition from "./JumpCondition.vue";
 import type { Question, Summary, SurveyItem } from "./types";
 import { useQuestion } from "./useQuestion";
 import { useResult } from "./useResult";
 
 const route = useRoute();
-const { find, save, remove, questionVisible, summaryVisible } = useQuestion();
+const { find, save, remove, questionVisible, summaryVisible, jumpVisible } =
+  useQuestion();
 
 const { jsonResult, previewResult, setJsonResult, setPreviewResult } =
   useResult();
@@ -36,6 +38,26 @@ onMounted(async () => {
 const hasSummary = computed(() => {
   return questionList.value.find((r) => r.id === "__complete");
 });
+
+const handleJumpEdit = (q: Question) => {
+  item = q;
+  jumpVisible.value = true;
+};
+
+const handleJumpConfirm = async (r: any) => {
+  const { __meta, ...rest } = item;
+
+  const entity = {
+    ...__meta,
+    surveyId,
+    content: JSON.stringify({ ...rest, ...{ jump: r || undefined } }),
+  };
+
+  await save(entity);
+  await loadQuestions(surveyId);
+
+  jumpVisible.value = false;
+};
 
 const handleEdit = async (row: Question | Summary) => {
   if (row.id === "__complete") {
@@ -131,6 +153,7 @@ const handleSummaryCreate = () => {
       :questions="questionList"
       @edit="handleEdit"
       @delete="handleDelete"
+      @jump-edit="handleJumpEdit"
     ></QuestionList>
   </div>
 
@@ -168,6 +191,16 @@ const handleSummaryCreate = () => {
       :visible="previewResult"
       @close="() => setPreviewResult(false)"
     ></FormPreview>
+  </div>
+
+  <div v-if="jumpVisible">
+    <JumpCondition
+      :questions="questionList"
+      :curr="item"
+      :visible="jumpVisible"
+      @close="jumpVisible = false"
+      @confirm="handleJumpConfirm"
+    ></JumpCondition>
   </div>
 </template>
 
