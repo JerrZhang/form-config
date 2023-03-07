@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Delete, Plus } from "@element-plus/icons-vue";
 import type { Question, Summary } from "./types";
 
@@ -12,6 +12,10 @@ const emit = defineEmits(["close", "confirm"]);
 
 const destinationPaths = props.questions.filter((q) => q.id !== props.curr.id);
 const defaultJumps = props.curr.jump || {};
+
+const showSelect = computed(() => props.curr.type.includes("choice"));
+
+const selectOptions = computed(() => props.curr.options);
 
 const jumpSteps = ref(
   Object.keys(defaultJumps).map((k) => {
@@ -65,13 +69,22 @@ const handleAdd = () => {
       :key="index"
       :model="jp"
     >
-      <el-form-item label="跳转条件(等于)">
-        <el-input
+      <el-form-item label="当值等于">
+        <el-select
+          v-if="showSelect"
           v-model="jp.key"
-          placeholder="请输入需要满足的跳转条件，目前只支持相等"
-        />
+          placeholder="请选择要条件值"
+        >
+          <el-option
+            v-for="(opt, index) in selectOptions"
+            :key="index"
+            :label="opt.value"
+            :value="opt.value"
+          ></el-option>
+        </el-select>
+        <el-input v-else v-model="jp.key" placeholder="请输入条件值" />
       </el-form-item>
-      <el-form-item label="选择跳转路径">
+      <el-form-item label="跳转到">
         <el-select v-model="jp.value" placeholder="请选择跳转路径">
           <el-option
             v-for="(item, idx) in destinationPaths"
