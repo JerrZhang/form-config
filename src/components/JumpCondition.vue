@@ -81,6 +81,7 @@ const handleAdd = () => {
             :label="opt.value"
             :value="opt.value"
           ></el-option>
+          <el-option label="_other" value="_other"></el-option>
         </el-select>
         <el-input v-else v-model="jp.key" placeholder="请输入条件值" />
       </el-form-item>
